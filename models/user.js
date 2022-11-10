@@ -23,7 +23,7 @@ const userSchema = Schema({
   },
 });
 
-const joiSchema = Joi.object({
+const joiSignupSchema = Joi.object({
   password: Joi.string().min(6).required(),
   email: Joi.string()
     .pattern(/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/)
@@ -31,9 +31,17 @@ const joiSchema = Joi.object({
   subscription: Joi.string().valueOf('starter', 'pro', 'business'),
 });
 
+const joiLoginSchema = Joi.object({
+  password: Joi.string().min(6).required(),
+  email: Joi.string()
+    .pattern(/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/)
+    .required(),
+});
+
 const User = model('user', userSchema);
 
 module.exports = {
   User,
-  joiSchema,
+  joiSignupSchema,
+  joiLoginSchema,
 };
