@@ -10,7 +10,7 @@ const signup = async (req, res) => {
   const { email, password, subscription } = req.body;
 
   const user = await User.findOne({ email });
-  if (user) throw createError(409, `Email in use`);
+  if (user) throw createError(409, `Email: '${email}' in use`);
 
   const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
   const result = await User.create({

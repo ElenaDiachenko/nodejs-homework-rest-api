@@ -5,5 +5,6 @@ const { validation, ctrlWrapper } = require('../../middlewares');
 const { joiSignupSchema, joiLoginSchema } = require('../../models/user');
 
 router.post('/signup', validation(joiSignupSchema), ctrlWrapper(ctrl.signup));
+router.post('/login', validation(joiLoginSchema), ctrlWrapper(ctrl.login));
 
 module.exports = router;
