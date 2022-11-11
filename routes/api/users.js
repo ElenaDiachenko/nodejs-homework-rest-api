@@ -6,7 +6,7 @@ const { joiSignupSchema, joiLoginSchema } = require('../../models/user');
 
 router.post('/signup', validation(joiSignupSchema), ctrlWrapper(ctrl.signup));
 router.post('/login', validation(joiLoginSchema), ctrlWrapper(ctrl.login));
-// router.post('/login', validation(joiLoginSchema), ctrlWrapper(ctrl.login));
+router.post('/logout', auth, ctrlWrapper(ctrl.logout));
 router.get('/current', auth, ctrlWrapper(ctrl.getCurrent));
 
 module.exports = router;
