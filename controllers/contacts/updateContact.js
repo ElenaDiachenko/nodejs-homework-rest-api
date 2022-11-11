@@ -1,5 +1,5 @@
 const { Contact } = require('../../models');
-const { getErrorMessage } = require('../../utils');
+const { createError } = require('../../utils');
 
 const updateContact = async (req, res) => {
   const { contactId } = req.params;
@@ -7,7 +7,7 @@ const updateContact = async (req, res) => {
     new: true,
   });
 
-  if (!result) return res.status(404).json(getErrorMessage(404, contactId));
+  if (!result) throw createError(404, `Contact with id=${contactId} not found`);
 
   res.status(200).json({
     status: 'success',

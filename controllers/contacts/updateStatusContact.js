@@ -1,16 +1,11 @@
 const { Contact } = require('../../models');
-const { getErrorMessage } = require('../../utils');
+const { createError } = require('../../utils');
 
 const updateStatusContact = async (req, res) => {
   const { contactId } = req.params;
   const { favorite } = req.body;
-  if (!favorite)
-    return res.status(400).json({
-      status: 'error',
-      code: 400,
-      message: 'missing field favorite',
-    });
 
+  if (!favorite) throw createError(400, `missing field favorite`);
   const result = await Contact.findByIdAndUpdate(
     contactId,
     { favorite },
