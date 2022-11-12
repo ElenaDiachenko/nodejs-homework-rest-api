@@ -1,10 +1,15 @@
 const { Contact } = require('../../models');
-const { createError } = require('../../utils');
+const { getErrorMessage } = require('../../utils');
 
 const getContactById = async (req, res) => {
   const { contactId } = req.params;
-  const result = await Contact.findById(contactId);
-  if (!result) throw createError(404, `Contact with id=${contactId} not found`);
+  const { _id } = req.user;
+  const result = await Contact.findById(contactId, _id);
+  if (!result) {
+    return res
+      .status(404)
+      .json(getErrorMessage(404, `Contact with id: '${contactId}'  not found`));
+  }
 
   res.status(200).json({
     status: 'success',
