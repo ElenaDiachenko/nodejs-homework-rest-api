@@ -1,8 +1,8 @@
-const getErrorMessage = (code, id) => {
+const getErrorMessage = (code, message) => {
   return {
     status: 'error',
     code,
-    message: `Contact with id=${id} not found`,
+    message,
   };
 };
 

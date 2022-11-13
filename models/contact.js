@@ -9,13 +9,21 @@ const contactSchema = Schema(
     },
     email: {
       type: String,
+      required: [true, 'Email is required'],
+      match: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
     },
     phone: {
       type: String,
+      required: [true, 'Phone is required'],
     },
     favorite: {
       type: Boolean,
       default: false,
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+      required: true,
     },
   },
   { versionKey: false },
@@ -23,7 +31,9 @@ const contactSchema = Schema(
 
 const joiSchema = Joi.object({
   name: Joi.string().min(3).max(30).required(),
-  email: Joi.string().min(5).required().email(),
+  email: Joi.string()
+    .pattern(/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/)
+    .required(),
   phone: Joi.string().required(),
   favorite: Joi.bool(),
 });
