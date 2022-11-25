@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const { User } = require('../../models');
-const { getErrorMessage } = require('../../utils');
+const { getErrorMessage, sendEmail } = require('../../utils');
+const { v4 } = require('uuid');
 
 const signup = async (req, res) => {
   const { email, password, subscription } = req.body;
@@ -12,12 +13,24 @@ const signup = async (req, res) => {
       .json(getErrorMessage(409, `Email: '${email}' in use`));
   }
 
+  const verificationToken = v4();
+
   const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+
   const result = await User.create({
     subscription,
     email,
     password: hashPassword,
+    verificationToken,
   });
+
+  const mail = {
+    to: email,
+    subject: 'Site registration confirmation',
+    html: `<a target="_blank" href="http://localhost:3000/api/auth/verify/${verificationToken}">Click to confirm registration</a>`,
+  };
+
+  await sendEmail(mail);
 
   res.status(201).json({
     status: 'success',
@@ -25,6 +38,7 @@ const signup = async (req, res) => {
     user: {
       email: result.email,
       subscription: result.subscription,
+      verificationToken: result.verificationToken,
     },
   });
 };

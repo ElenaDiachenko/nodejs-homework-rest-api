@@ -2,13 +2,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../../models');
 const { getErrorMessage } = require('../../utils');
-const { joiLoginSchema } = require('../../models/user');
+// const { joiLoginSchema } = require('../../models/user');
 const { SECRET_KEY } = process.env;
 
 const login = async (req, res) => {
-  // const { error } = joiLoginSchema.validate(req.body);
-  // if (error) throw createError(400, error.message);
-
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
@@ -18,16 +15,16 @@ const login = async (req, res) => {
       .json(getErrorMessage(401, 'Email or password is wrong'));
   }
 
+  if (!user.verify) {
+    return res.status(401).json(getErrorMessage(401, 'Email not verify'));
+  }
+
   const comparePassword = bcrypt.compareSync(password, user.password);
   if (!comparePassword) {
     return res
       .status(401)
       .json(getErrorMessage(401, 'Email or password is wrong'));
   }
-
-  // {
-  //   throw Error(401, 'Email or password is wrong');
-  // }
 
   const payload = {
     id: user._id,
